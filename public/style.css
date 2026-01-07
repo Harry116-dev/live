@@ -7400,9 +7400,9 @@ a.mytooltip {
 }
 
 @media (min-width: 768px) {
-  .page-wrapper {
+  /* .page-wrapper {
       margin-left:240px
-  }
+  } */
 
   .footer {
       left: 240px
@@ -7411,7 +7411,7 @@ a.mytooltip {
 
 @media (max-width: 1023px) {
   .page-wrapper {
-      margin-left:240px;
+      /* margin-left:240px; */
       transition: 0.2s ease-in
   }
 
@@ -7450,7 +7450,7 @@ a.mytooltip {
   }
 
   .mini-sidebar .page-wrapper {
-      margin-left: 60px
+      /* margin-left: 60px */
   }
 
   .mini-sidebar .footer {

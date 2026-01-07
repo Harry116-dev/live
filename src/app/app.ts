@@ -195,6 +195,12 @@ export class App {
     this.appID = appInfo.appID;
     this.server = appInfo.server;
   }
+
+
+  ngOnInit(){
+    this.createZegoExpressEngineOption();
+    this.checkSystemRequire();
+  }
   // Step1 Create ZegoExpressEngine
   createZegoExpressEngine() {
     this.getAppInfo();
