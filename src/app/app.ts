@@ -15,8 +15,8 @@ export class App {
   protected readonly title = signal('live');
 
   constructor(public http: HttpClient) { }
-  appID: number = 1042883316; 
-  server: string = 'wss://webliveroom1042883316-api.coolzcloud.com/ws'; 
+  appID: number = 1042883316;
+  server: string = 'wss://webliveroom1042883316-api.coolzcloud.com/ws';
   tokenUrl: string = 'https://token-server-alpha.vercel.app/api';
   userID: any = "";
   roomID: string = '';
@@ -45,6 +45,7 @@ export class App {
   audioCheckStatus: boolean = false;
   publishInfoStreamID: string = "";
   playInfoStreamID: string = "";
+  switchRoom:any = "";
 
   async enumDevices() {
     const any = await this.zg.enumDevices();
@@ -69,32 +70,101 @@ export class App {
     this.videoDeviceList.push({ deviceID: '0', deviceName: '禁止' });
     this.cameraDevicesVal = this.videoDeviceList[0].deviceID;
   }
-  initEvent() {
-    this.zg.on('roomStateUpdate', (roomId: string, state: string) => {
-      if (state === 'CONNECTED') {
-        this.connectStatus = 'CONNECTED';
-      }
-      if (state === 'DISCONNECTED') {
-        this.connectStatus = 'DISCONNECTED';
-      }
-    })
+  // initEvent() {
+  //   this.zg.on('roomStateUpdate', (roomId: string, state: string) => {
+  //     if (state === 'CONNECTED') {
+  //       this.connectStatus = 'CONNECTED';
+  //     }
+  //     if (state === 'DISCONNECTED') {
+  //       this.connectStatus = 'DISCONNECTED';
+  //     }
+  //   })
 
+  //   this.zg.on('publisherStateUpdate', (result: any) => {
+  //     if (result.state === 'PUBLISHING') {
+  //       this.publishInfoStreamID = result.streamID;
+  //     } else if (result.state === 'NO_PUBLISH') {
+  //       this.publishInfoStreamID = "";
+  //     }
+  //   });
+
+  //   this.zg.on('playerStateUpdate', (result: any) => {
+  //     if (result.state === 'PLAYING') {
+  //       this.playInfoStreamID = result.streamID;
+  //     } else if (result.state === 'NO_PLAY') {
+  //       this.playInfoStreamID = "";
+  //     }
+  //   });
+  // }
+
+
+
+   initEvent() {
+    /* ---------- ROOM ---------- */
+    this.zg.on('roomStateUpdate', (roomId: string, state: string) => {
+      console.log('[roomStateUpdate]', roomId, state);
+      this.connectStatus = state;
+    });
+
+    /* ---------- PUBLISHER ---------- */
     this.zg.on('publisherStateUpdate', (result: any) => {
+      console.log('[publisherStateUpdate]', result);
       if (result.state === 'PUBLISHING') {
-        this.publishInfoStreamID = result.streamID;
+        this.streamID = result.streamID;
       } else if (result.state === 'NO_PUBLISH') {
-        this.publishInfoStreamID = "";
+        this.streamID = '';
+        this.publishStreamStatus = false;
       }
     });
 
+    /* ---------- PLAYER ---------- */
     this.zg.on('playerStateUpdate', (result: any) => {
+      console.log('[playerStateUpdate]', result);
       if (result.state === 'PLAYING') {
-        this.playInfoStreamID = result.streamID;
+        this.playStreamID = result.streamID;
       } else if (result.state === 'NO_PLAY') {
-        this.playInfoStreamID = "";
+        this.playStreamID = '';
+        this.playStreamStatus = false;
+        this.remoteStream = null;
+      }
+    });
+
+    /* ========== ROOM STREAM UPDATE (Viewer) ========== */
+    this.zg.on('roomStreamUpdate', async (roomID:any, updateType:any, streamList:any) => {
+      console.log('[roomStreamUpdate]', updateType, streamList);
+
+      if (updateType === 'ADD') {
+        for (const stream of streamList) {
+          if (this.remoteStream) return; // prevent duplicate play
+          try {
+            this.playStreamID = stream.streamID;
+            this.remoteStream = await this.zg.startPlayingStream(stream.streamID, {
+              video: true,
+              audio: true
+            });
+            this.remoteStream.playVideo(document.querySelector('#remoteVideo'));
+            this.playStreamStatus = true;
+            console.log('Viewer playing stream:', stream.streamID);
+          } catch (err) {
+            console.error('Viewer play failed', err);
+          }
+        }
+      }
+
+      if (updateType === 'DELETE') {
+        for (const stream of streamList) {
+          console.log('Stopping stream:', stream.streamID);
+          this.zg.stopPlayingStream(stream.streamID);
+          this.clearRemoteStream();
+          this.playStreamID = '';
+          this.playStreamStatus = false;
+        }
       }
     });
   }
+
+
+
   getAppInfo() {
     let appID = this.appID; // 请从官网控制台获取对应的appID Please obtain the corresponding appid from the official website console
     let server = this.server; // 请从官网控制台获取对应的server地址，否则可能登录失败 Please obtain the corresponding server address from the console on the official website, otherwise the login may fail
@@ -301,4 +371,53 @@ export class App {
     this.checkSystemRequireStatus = '';
     this.audioCheckStatus = false;
   }
+
+
+
+    /* ==================== VIEWER ==================== */
+  async loginViewer(roomID: string) {
+    if (!this.zg) return;
+
+    this.roomID = roomID;
+
+    const response: any = await this.http.get(`${this.tokenUrl}/${roomID}/${this.userID}`).toPromise();
+    this.token = response.token;
+
+    await this.zg.loginRoom(roomID, this.token, {
+      userID: this.userID,
+      userName: this.userID
+    });
+
+    this.isLogin = true;
+  }
+
+  async switchRoomViewer(newRoomID: string) {
+    if (!this.zg) return;
+
+    // Stop current stream
+    if (this.playStreamID) {
+      this.zg.stopPlayingStream(this.playStreamID);
+    }
+    this.clearRemoteStream();
+    this.playStreamID = '';
+    this.playStreamStatus = false;
+
+    // Logout old room
+    if (this.isLogin && this.roomID) {
+      await this.zg.logoutRoom(this.roomID);
+    }
+    this.isLogin = false;
+
+    // Login new room
+    await this.loginViewer(newRoomID);
+  }
+
+  clearRemoteStream() {
+    if (this.remoteStream) {
+      this.zg.destroyStream(this.remoteStream);
+      this.remoteStream = null;
+    }
+  }
 }
+
+

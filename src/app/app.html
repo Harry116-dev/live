@@ -129,14 +129,14 @@
             <div class="action-content">
               <div class="action-room font-14">
                 <div class="action-roomId ">
-                  RoomID 
+                  RoomID
                   <div class="icon-question">?
                     <div class="pop-box" data-lang="RoomIDDesc">Tooltip text</div>
                   </div>
                   <input type="text" id="RoomID" [(ngModel)]="roomID" [disabled]="isLogin" />
                 </div>
                 <div class="action-userName">
-                  UserID 
+                  UserID
                   <div class="icon-question">?
                     <div class="pop-box">
                       <span data-lang="UserIDDesc"></span>
@@ -145,7 +145,7 @@
                   <input type="text" id="UserName" [(ngModel)]="userID" [disabled]="isLogin" />
                 </div>
                 <div class="action-token">
-                  Token 
+                  Token
                   <div class="icon-question">?
                     <div class="pop-box">
                       <span data-lang="TokenDesc"></span>
@@ -282,6 +282,9 @@
         </div>
       </div>
     </div>
+
+    <input type="text" id="newRoom" [(ngModel)]="switchRoom" />
+    <button type="button" (click)="switchRoomViewer(switchRoom)">Switch</button>
     <ul class="goToDoc">
       <li>
         <span data-lang="HelpDocsVideoCodec"> Web 端视频编码默认使用 VP8。如果需要体验和其他端互通或者转推 CDN 功能，请在调试与配置页面修改为 H.264。</span>
