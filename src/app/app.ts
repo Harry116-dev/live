@@ -395,6 +395,8 @@ export class App {
     });
 
     this.isLogin = true;
+
+    this.startPlaying();
   }
 
   async switchRoomViewer(newRoomID: string) {
