@@ -131,18 +131,20 @@ export class App {
 
     /* ========== ROOM STREAM UPDATE (Viewer) ========== */
     this.zg.on('roomStreamUpdate', async (roomID:any, updateType:any, streamList:any) => {
-      console.log('[roomStreamUpdate]', updateType, streamList);
-
       if (updateType === 'ADD') {
         for (const stream of streamList) {
-          if (this.remoteStream) return; // prevent duplicate play
+          if (this.remoteStream!=null) return; // prevent duplicate play
           try {
             this.playStreamID = stream.streamID;
             this.remoteStream = await this.zg.startPlayingStream(stream.streamID, {
               video: true,
               audio: true
             });
-            this.remoteStream.playVideo(document.querySelector('#remoteVideo'));
+              const video = document.getElementById('playVideo') as HTMLVideoElement;
+              video.srcObject = this.remoteStream;
+              video.playsInline = true;
+
+
             this.playStreamStatus = true;
             console.log('Viewer playing stream:', stream.streamID);
           } catch (err) {
