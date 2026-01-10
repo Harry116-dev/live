@@ -15,14 +15,14 @@ export class App {
   protected readonly title = signal('live');
 
   constructor(public http: HttpClient) { }
-  // appID: number = 1042883316;
-  // server: string = 'wss://webliveroom1042883316-api.coolzcloud.com/ws';
+  appID: number = 1042883316;
+  server: string = 'wss://webliveroom1042883316-api.coolzcloud.com/ws';
 
-  appID: number = 449016883;
-  server: string = 'wss://webliveroom449016883-api.coolzcloud.com/ws';
+  // appID: number = 449016883;
+  // server: string = 'wss://webliveroom449016883-api.coolzcloud.com/ws';
 
 
-  
+
   tokenUrl: string = 'https://token-server-alpha.vercel.app/api';
   userID: any = "";
   roomID: string = '';
