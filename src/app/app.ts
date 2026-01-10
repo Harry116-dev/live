@@ -23,7 +23,7 @@ export class App {
 
 
 
-  tokenUrl: string = 'https://token-server-alpha.vercel.app/api';
+  tokenUrl: string = 'https://7a24b3c5cdf5.ngrok-free.app/api';
   userID: any = "";
   roomID: string = '';
   token: string = '04AAAAAGU3Z08AEDY5NzBhN2hjaGNlajVrYXUA0HeXZRcsPF/WYAE7I1IHRswrlVwVo6j6wNYIAn60jupNLdSpjhzZo9KJLEYOf/I24tPNhFVJDqUS1YErV2QVrcewvOo+OON6XyJkhoNT7+WMNKhrQ+4NmCB0RUr1HdZ/HUaVeXCTF5yzidtrNybWuXBfH6xYNyuqedyA2wBZztvQl+1JKndynA5PnM9GdYyToTQ6lnpVvyBLvL2fH0luM2v8psw+Gd0JQ7bYm6tdqJInJZ+i2zSKUYIEFfcZNGH5ZewUBg17Zt7zvZdZ5z7BfCc=';
