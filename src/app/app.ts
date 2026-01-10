@@ -327,7 +327,11 @@ export class App {
 
       // 🔹 1. Hit token API
       const response: any = await this.http
-        .get(`${this.tokenUrl}/${this.roomID}/${this.userID}`)
+        .get(`${this.tokenUrl}/${this.roomID}/${this.userID}`, {
+          headers: {
+            'ngrok-skip-browser-warning': 'true'
+          }
+        })
         .toPromise();
 
       this.token = response?.token;
