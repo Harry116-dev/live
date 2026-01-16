@@ -354,9 +354,10 @@ export class App {
 
 
       await this.loginRoom(this.roomID, astroId, "ManuG", this.token);
+      this.startPublishing();
     } catch (err) {
       this.isLogin = false;
-      alert(err);
+      alert(JSON.stringify(err));
       console.log(err);
     }
   }

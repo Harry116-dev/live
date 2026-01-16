@@ -1,6 +1,344 @@
-video {
+/* video {
   width: 100%;
   height: 300px;
   object-fit: cover;
   border-radius: 8px;
+} */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #1e293b 0%, #7e22ce 50%, #1e293b 100%);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Start Screen Styles */
+.start-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.start-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 60px 40px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  text-align: center;
+  max-width: 500px;
+}
+
+.video-icon-wrapper {
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 30px;
+  box-shadow: 0 10px 30px rgba(168, 85, 247, 0.4);
+}
+
+.video-icon-wrapper i {
+  font-size: 60px;
+  color: white;
+}
+
+.start-title {
+  color: white;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.start-subtitle {
+  color: #d1d5db;
+  font-size: 1.1rem;
+  margin-bottom: 40px;
+}
+
+.btn-start-live {
+  background: linear-gradient(135deg, #9333ea 0%, #ec4899 100%);
+  border: none;
+  padding: 16px 40px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 12px;
+  color: white;
+  box-shadow: 0 10px 30px rgba(147, 51, 234, 0.4);
+  transition: all 0.3s ease;
+}
+
+.btn-start-live:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 40px rgba(147, 51, 234, 0.6);
+}
+
+/* Meeting Screen Styles */
+.meeting-screen {
+  display: none;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.meeting-screen.active {
+  display: block;
+}
+
+.header-bar {
+  background: rgba(30, 41, 59, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 12px 12px 0 0;
+  padding: 16px 24px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: white;
+  font-weight: 600;
+}
+
+.live-dot {
+  width: 12px;
+  height: 12px;
+  background: #ef4444;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.btn-leave {
+  background: #dc2626;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-leave:hover {
+  background: #b91c1c;
+  transform: translateY(-1px);
+}
+
+.video-container {
+  background: #0f172a;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.video-display {
+  position: relative;
+  aspect-ratio: 16/9;
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.video-placeholder {
+  text-align: center;
+}
+
+.video-placeholder-icon {
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+}
+
+.video-placeholder-icon i {
+  font-size: 60px;
+  color: white;
+}
+
+.live-indicator {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: #dc2626;
+  padding: 8px 16px;
+  border-radius: 20px;
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.live-indicator-dot {
+  width: 8px;
+  height: 8px;
+  background: white;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+.controls-bar {
+  background: rgba(30, 41, 59, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+}
+
+.control-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  transition: all 0.3s ease;
+  margin: 0 8px;
+}
+
+.control-btn.active {
+  background: #475569;
+  color: white;
+}
+
+.control-btn.inactive {
+  background: #dc2626;
+  color: white;
+}
+
+.control-btn:hover {
+  transform: scale(1.1);
+}
+
+.sidebar-card {
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 20px;
+}
+
+.card-users {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: white;
+}
+
+.card-donations {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  color: white;
+}
+
+.card-info {
+  background: rgba(30, 41, 59, 0.8);
+  backdrop-filter: blur(10px);
+  color: white;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+}
+
+.card-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.card-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.card-icon {
+  font-size: 24px;
+  opacity: 0.8;
+}
+
+.card-value {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin: 10px 0;
+  line-height: 1;
+}
+
+.card-subtitle {
+  opacity: 0.9;
+  font-size: 0.875rem;
+}
+
+.btn-simulate {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  width: 100%;
+  margin-top: 20px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-simulate:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  color: #94a3b8;
+  font-size: 0.875rem;
+}
+
+.info-value {
+  font-weight: 600;
+}
+
+.info-value.success {
+  color: #10b981;
+}
+
+.info-value.danger {
+  color: #ef4444;
+}
+
+@media (max-width: 991px) {
+  .sidebar-card {
+    margin-top: 20px;
+  }
 }
