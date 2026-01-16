@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
@@ -21,9 +21,10 @@ export class App {
   appID: number = 449016883;
   server: string = 'wss://webliveroom449016883-api.coolzcloud.com/ws';
 
+  astroToken:any = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoibWFudSBTaGFybWEiLCJwaG9uZSI6ODI2NDk5NjkwNywiaXNfYWRtaW4iOmZhbHNlLCJpc19hc3Ryb2xvZ2VyIjp0cnVlLCJpc19jdXN0b21lciI6ZmFsc2UsImlzX21hbmFnZXIiOmZhbHNlLCJfaWQiOiI2ODNlYTVlMTE2MmE4Mjk4NWY3MzU2NGQiLCJ1c2VybmFtZSI6IiIsImVtYWlsIjoic2hhcm1hMTJtYW51Z0BnbWFpbC5jb20iLCJzdGF0dXMiOnRydWUsInJvbGUiOiJBc3Ryb2xvZ2VyIiwiaXNfc29jaWFsX2xvZ2luIjpmYWxzZSwic29jaWFsX2lkIjpudWxsLCJpc19mb3JlaWduIjpmYWxzZSwiY291bnRyeV9jb2RlIjoiOTEiLCJpYXQiOjE3Njg1Nzk0MzMsImV4cCI6MTgwMDExNTQzM30.8rQ_SiV8_3MQLdHiR1sf4RBSp-aoyfYaUieXLgB5_cc";
 
 
-  tokenUrl: string = 'https://token-server-alpha.vercel.app/api';
+  tokenUrl: string = 'https://panditapi.ksesystem.com/astro/createLiveStreamOnline';
   userID: any = "";
   roomID: string = '';
   token: string = '04AAAAAGU3Z08AEDY5NzBhN2hjaGNlajVrYXUA0HeXZRcsPF/WYAE7I1IHRswrlVwVo6j6wNYIAn60jupNLdSpjhzZo9KJLEYOf/I24tPNhFVJDqUS1YErV2QVrcewvOo+OON6XyJkhoNT7+WMNKhrQ+4NmCB0RUr1HdZ/HUaVeXCTF5yzidtrNybWuXBfH6xYNyuqedyA2wBZztvQl+1JKndynA5PnM9GdYyToTQ6lnpVvyBLvL2fH0luM2v8psw+Gd0JQ7bYm6tdqJInJZ+i2zSKUYIEFfcZNGH5ZewUBg17Zt7zvZdZ5z7BfCc=';
@@ -320,21 +321,37 @@ export class App {
       this.checkSystemRequireStatus = 'ERROR';
     }
   }
+
+  body = new HttpParams().set('astroId', "683ea5e2162a82985f735650").set('userId', "683ea5e1162a82985f73564d");
+
+
+
   async loginRoomOption() {
     if (!this.zg) return alert('you should create zegoExpressEngine');
     try {
       this.isLogin = true;
+    let headers = {
+      'Authorization': `${this.astroToken}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'ngrok-skip-browser-warning': 'true'
+    };
 
       // 🔹 1. Hit token API
+      // const response: any = await this.http
+      //   .get(`${this.tokenUrl}/${this.roomID}/${this.userID}`, {
+      //     headers: {
+      //       'ngrok-skip-browser-warning': 'true'
+      //     }
+      //   })
+      //   .toPromise();
       const response: any = await this.http
-        .get(`${this.tokenUrl}/${this.roomID}/${this.userID}`, {
-          headers: {
-            'ngrok-skip-browser-warning': 'true'
-          }
-        })
+        .post(this.tokenUrl, this.body.toString(), {   headers })
         .toPromise();
 
       this.token = response?.token;
+      this.userID = response.result.userId;
+      this.streamID = response.result.stream_id;
+      this.roomID = response.result.room_id;
 
       if (!this.token) {
         throw new Error('Token not received from server');
