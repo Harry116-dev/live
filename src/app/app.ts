@@ -243,13 +243,7 @@ export class App {
       return false;
     }
   }
-  //Step3 Login room
-  async loginRoom(roomId: string, userId: string, userName: string, token: string) {
-    return this.zg.loginRoom(roomId, token, {
-      userID: userId,
-      userName
-    })
-  }
+
   // Step4 Start Publishing Stream
   async startPublishingStream(streamId: string, config: any) {
     try {
@@ -352,17 +346,27 @@ export class App {
       this.userID = response.result.userId;
       this.streamID = response.result.stream_id;
       this.roomID = response.result.room_id;
+      let astroId = response.result.astroId;
 
       if (!this.token) {
         throw new Error('Token not received from server');
       }
 
 
-      await this.loginRoom(this.roomID, this.userID, this.userID, this.token);
+      await this.loginRoom(this.roomID, astroId, "ManuG", this.token);
     } catch (err) {
       this.isLogin = false;
+      alert(err);
       console.log(err);
     }
+  }
+
+    //Step3 Login room
+  async loginRoom(roomId: string, userId: string, userName: string, token: string) {
+    return this.zg.loginRoom(roomId, token, {
+      userID: userId,
+      userName
+    })
   }
   async startPublishing() {
     const flag = await this.startPublishingStream.call(this, this.streamID, {
